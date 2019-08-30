@@ -1,56 +1,63 @@
+docker 容器操作命令
 
-容器生命周期管理命令
-docker run 创建一个新的容器并运行一个命令
-docker run -itd --name zookeeper -h zookeeper -p2181:2181 zwl/zookeeper:3.4.13 bash
--i以交互模式运行容器，通常与 -t 同时使用
--t为容器重新分配一个伪输入终端，通常与 -i 同时使用
--d 后台运行容器，并返回容器ID；
--itd 以后台形式运行容器，并给该容器分配交互终端
--h 给该容器分配名字
--p 映射地址
+docker ps 列出容器
 
-docker start 启动一个或多个已经被停止的容器
+语法
+-a :显示所有的容器，包括未运行的。
+-f :根据条件过滤显示的内容。
+--format :指定返回值的模板文件
+-l :显示最近创建的容器。
+-n :列出最近创建的n个容器。
+--no-trunc :不截断输出。
+-q :静默模式，只显示容器编号。
+-s :显示总的文件大小。
 
-dokcer start 容器名
-
-docker stop 停止一个运行中的容器
-
-docker stop 容器名
-
-docker restart 重启容器
-
-docker restart 容器名
+docker ps -a 
+显示所有的容器，包括未运行的。
+docker ps -a | grep zwl
 
 
-docker kill 杀掉一个运行中的容器
+docker inspect 获取容器/镜像的元数据。
 
-docker kill -s KILL zookeeper 
--s 给容器发送一个命令
+-f :指定返回值的模板文件
+-s :显示总的文件大小。
+--type :为指定类型返回JSON。
 
-docker rm 删除一个或多个容器
+docker top mymysql
+查看容器mymysql的进程信息。
 
-OPTIONS说明：
+docker attach :连接到正在运行中的容器。
+容器mynginx将访问日志指到标准输出，连接到容器查看访问信息。
+docker attach --sig-proxy=false mynginx
 
--f :通过SIGKILL信号强制删除一个运行中的容器
+docker events : 从服务器获取实时事件
+-f ：根据条件过滤事件；
 
--l :移除容器间的网络连接，而非容器本身
+--since ：从指定的时间戳后显示所有事件;
 
--v :-v 删除与容器关联的卷
+--until ：流水时间显示到指定的时间为止；
 
-
-可通过
-docker ps | grep zwl
-查看具体版本的容器
-
-docker pause 容器名 暂停该容器类的所有线程
-
-docker unpause 容器名 恢复改容器内的所有线程
-
-
-docker create ：创建一个新的容器但不启动它
-语法和docker run 一致
-
-
-docker exec ：在运行的容器中执行命令
-docker exec -i -t zookeeper /bin/bash
-输入exit可退出
+ docker events  --since="1467302400"
+ 
+ 
+ docker logs : 获取容器的日志
+ -f : 跟踪日志输出
+ 
+ --since :显示某个开始时间的所有日志
+ 
+ -t : 显示时间戳
+ 
+ --tail :仅列出最新N条容器日志
+ docker logs -f zookeeper
+ 跟踪查看容器zookeeper的日志输出。
+ docker logs --since="2018-07-01" --tail=10 zookeeper
+ 查看容器zookeeper从2016年7月1日后的最新10条日志
+ 
+ 
+ docker wait : 阻塞运行直到容器停止，然后打印出它的退出代码。
+ docker wait zookeeper
+ 
+ 
+ docker port :列出指定的容器的端口映射，或者查找将PRIVATE_PORT NAT到面向公众的端口。
+ 查看容器zookeeper的端口映射情况。
+ docker port zookeeper 
